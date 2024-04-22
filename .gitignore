@@ -1,0 +1,18 @@
+# Archivos objeto compilados
+*.o
+
+# Bibliotecas dinámicas compiladas
+*.so
+
+# Bibliotecas estáticas compiladas
+*.a
+
+# Ejecutables compilados
+*.out
+*.exe
+
+# Directorio de construcción
+build/
+
+# Archivos específicos de la IDE
+.vscode/
