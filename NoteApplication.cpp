@@ -137,26 +137,33 @@ void NoteApplication::on_folder_dialog_response(int response_id, Gtk::FileChoose
     {
     case Gtk::ResponseType::OK:
     {
-        std::string folder_path = dialog->get_file()->get_path();
-
-        std::string file_name = win->enTitle.get_text();
-        full_path = folder_path + "/" + file_name + ".txt";
-
-        std::string text = win->m_TextView.get_buffer()->get_text();
-
-        std::ofstream file(full_path);
-
-        if (file.is_open())
+        if (!dialog->get_file()->get_path().empty())
         {
-            file << text << std::endl;
-            file.close();
-        }
-        else
-        {
-            std::cerr << "Error al abrir el archivo." << std::endl;
+            add_action("save",
+                       sigc::mem_fun(*this, &NoteApplication::on_menu_save));
+
+            std::string folder_path = dialog->get_file()->get_path();
+
+            std::string file_name = win->enTitle.get_text();
+            full_path = folder_path + "/" + file_name + ".txt";
+
+            std::string text = win->m_TextView.get_buffer()->get_text();
+
+            std::ofstream file(full_path);
+
+            if (file.is_open())
+            {
+                file << text << std::endl;
+                file.close();
+            }
+            else
+            {
+                std::cerr << "Error al abrir el archivo." << std::endl;
+            }
+
+            std::cout << "Archivo guardado en: " << full_path << std::endl;
         }
 
-        std::cout << "Archivo guardado en: " << full_path << std::endl;
         break;
     }
     case Gtk::ResponseType::CANCEL:
@@ -186,9 +193,6 @@ void NoteApplication::on_menu_save_as()
     dialog->add_button("Select", Gtk::ResponseType::OK);
 
     dialog->show();
-
-    add_action("save",
-               sigc::mem_fun(*this, &NoteApplication::on_menu_save));
 }
 void NoteApplication::on_menu_save()
 {
