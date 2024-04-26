@@ -8,8 +8,11 @@ class MainWindow : public Gtk::ApplicationWindow
 public:
   MainWindow();
   virtual ~MainWindow();
+  void clearTextView();
   Gtk::TextView m_TextView;
   Gtk::Entry enTitle;
+  Glib::RefPtr<Gtk::TextBuffer> m_refTextBuffer = Gtk::TextBuffer::create();
+  ;
 
 protected:
   // Child widgets:
@@ -17,8 +20,6 @@ protected:
   Gtk::Box m_Box_H;
 
   Gtk::ScrolledWindow m_ScrolledWindow;
-
-  Glib::RefPtr<Gtk::TextBuffer> m_refTextBuffer;
 };
 
 #endif // GTKMM_EXAMPLEWINDOW_H

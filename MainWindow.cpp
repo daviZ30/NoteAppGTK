@@ -27,6 +27,10 @@ MainWindow::MainWindow()
     m_Box.append(m_Box_H);
     m_Box.append(m_ScrolledWindow);
 }
+void MainWindow::clearTextView()
+{
+    m_refTextBuffer->set_text("");
+}
 
 MainWindow::~MainWindow()
 {

@@ -19,6 +19,7 @@ protected:
 private:
   void create_window();
 
+  void generete_menu();
   void on_window_hide(Gtk::Window *window);
   void on_menu_file_new_generic();
   void on_menu_save_as();

@@ -15,27 +15,18 @@ Glib::RefPtr<NoteApplication> NoteApplication::create()
     return Glib::make_refptr_for_instance<NoteApplication>(new NoteApplication());
 }
 
-void NoteApplication::on_startup()
+void NoteApplication::generete_menu()
 {
-    // Call the base class's implementation:
-    Gtk::Application::on_startup();
-
-    // Create actions for menus and toolbars.
-    // We can use add_action() because Gtk::Application derives from Gio::ActionMap.
-
-    // File|New sub menu:
     add_action("new",
                sigc::mem_fun(*this, &NoteApplication::on_menu_file_new_generic));
 
     add_action("save_as",
                sigc::mem_fun(*this, &NoteApplication::on_menu_save_as));
 
-    // File menu:
     add_action("quit", sigc::mem_fun(*this, &NoteApplication::on_menu_file_quit));
 
     m_refBuilder = Gtk::Builder::create();
 
-    // Layout the actions in a menubar and a menu:
     Glib::ustring ui_info =
         "<interface>"
         "  <!-- menubar -->"
@@ -78,10 +69,7 @@ void NoteApplication::on_startup()
         std::cerr << "Building menus failed: " << ex.what();
     }
 
-    // Get the menubar and the app menu, and add them to the application:
     auto object = m_refBuilder->get_object("menu-example");
-    // auto object_btn = m_refBuilder->get_object("btn_save");
-    // auto btn_save = std::dynamic_pointer_cast<Gio::MenuItem>(object_btn);
 
     auto gmenu = std::dynamic_pointer_cast<Gio::Menu>(object);
 
@@ -94,13 +82,14 @@ void NoteApplication::on_startup()
         set_menubar(gmenu);
     }
 }
+void NoteApplication::on_startup()
+{
+    Gtk::Application::on_startup();
+    generete_menu();
+}
 
 void NoteApplication::on_activate()
 {
-    // std::cout << "debug1: " << G_STRFUNC << std::endl;
-    //  The application has been started, so let's show a window.
-    //  A real application might want to reuse this window in on_open(),
-    //  when asked to open a file, if no changes have been made yet.
     create_window();
 }
 
@@ -109,11 +98,8 @@ void NoteApplication::create_window()
     auto *window = new MainWindow();
     win = window;
 
-    // Make sure that the application runs for as long this window is still open:
     add_window(*window);
 
-    // Delete the window when it is hidden.
-    // That's enough for this simple example.
     window->signal_hide().connect(sigc::bind(
         sigc::mem_fun(*this, &NoteApplication::on_window_hide), window));
 
@@ -128,7 +114,9 @@ void NoteApplication::on_window_hide(Gtk::Window *window)
 
 void NoteApplication::on_menu_file_new_generic()
 {
-    std::cout << "A File|New menu item was selected." << std::endl;
+    remove_action("save");
+    win->enTitle.set_text("Nuevo Archivo");
+    win->clearTextView();
 }
 
 void NoteApplication::on_folder_dialog_response(int response_id, Gtk::FileChooserDialog *dialog)
